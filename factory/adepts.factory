@@ -1,0 +1,2 @@
+prototype: "/characters/adepts/adepts.go"
+load_dynamically: false

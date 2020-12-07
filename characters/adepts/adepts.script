@@ -1,0 +1,50 @@
+local data = require "collections.data"
+local h_c = tonumber(sys.get_config("display.height"))
+go.property("roof_num", 0)
+go.property("id", 0)
+
+function init(self)
+	self.clear_roof = false
+end
+
+function update(self, dt)
+	local pos = go.get_position()
+
+	if self.clear_roof then
+		pos.y = pos.y + 500 *dt
+		go.set_position(pos)
+	end
+
+	if pos.y > h_c + 200 then
+		go.delete()
+	end
+
+	if data.PRESSF and data.PLAYER_ROOF == "roof" .. self.roof_num then
+		self.clear_roof = true
+	end
+end
+
+function final(self)
+	if self.roof_num == 1 then
+		data.BUILD1_COUNT_ADEPTS = data.BUILD1_COUNT_ADEPTS - 1
+		if data.BUILD1_COUNT_ADEPTS <= 0 then
+			data.PRESSF = false
+		end
+	end
+
+	if self.roof_num == 2 then
+		data.BUILD2_COUNT_ADEPTS = data.BUILD2_COUNT_ADEPTS - 1
+		if data.BUILD2_COUNT_ADEPTS <= 0 then
+			data.PRESSF = false
+		end
+	end
+
+	if self.roof_num == 3 then
+		data.BUILD3_COUNT_ADEPTS = data.BUILD3_COUNT_ADEPTS - 1
+		if data.BUILD3_COUNT_ADEPTS <= 0 then
+			data.PRESSF = false
+		end
+	end
+
+	table.remove(data.ADEPTS, self.id)
+end

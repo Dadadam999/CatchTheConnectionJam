@@ -1,0 +1,2 @@
+prototype: "/characters/bird/bird.go"
+load_dynamically: false

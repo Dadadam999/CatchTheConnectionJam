@@ -1,0 +1,56 @@
+local data = require "collections.data"
+go.property("speed", 100)
+
+local contact_hindrance = false
+local contact_player = false
+
+local w_screen = tonumber(sys.get_config("display.width"))
+function init(self)
+	self.move = vmath.vector3()
+	self.direction = "left"
+end
+
+function update(self, dt)
+	self.move = go.get_position()
+	
+	if self.move.x > w_screen + 200 then
+		self.direction = "right"
+	end
+	
+	if self.move.x < -200 then
+		self.direction = "left"
+	end
+
+	if self.direction == "left" then
+		self.move.x = self.move.x + self.speed * dt
+	else
+		self.move.x = self.move.x - self.speed * dt
+	end
+		
+	go.set_position(self.move)
+	
+	if contact_player and data.BATTERY < data.BATTERY_MAX then
+		data.BATTERY = data.BATTERY + data.STARLINK_PLUS
+		msg.post("/gui#gui", "battery_change", { count_battery = data.BATTERY })
+	end
+
+	if contact_player and contact_hindrance and data.BATTERY > 0 then
+		data.BATTERY = data.BATTERY - data.MINUS_BIRD
+		msg.post("/gui#gui", "battery_change", { count_battery = data.BATTERY })
+	end
+
+	contact_hindrance = false
+	contact_player = false
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("contact_point_response") then
+		if message.group == hash("bird") or message.group == hash("airbus") then
+			contact_hindrance = true
+		end
+		
+		if message.group == hash("player") then
+			contact_player = true
+		end
+	end
+end

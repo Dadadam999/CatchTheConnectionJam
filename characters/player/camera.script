@@ -1,0 +1,15 @@
+function init(self)
+	msg.post(".", "acquire_camera_focus")
+	self.h_camera = tonumber(sys.get_config("display.height"))
+	self.w_camera = tonumber(sys.get_config("display.width"))
+end
+
+--fixing camera
+function update(self, dt)
+	local camera = go.get_position("/camera")
+
+	camera.x = 0
+	camera.y = 0
+
+	go.set_position(camera)
+end

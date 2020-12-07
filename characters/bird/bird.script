@@ -1,0 +1,15 @@
+go.property("speed", 250)
+local w_screen = tonumber(sys.get_config("display.width"))
+function init(self)
+	self.move = vmath.vector3()
+end
+
+function update(self, dt)
+	self.move = go.get_position()
+	if(self.move.x > w_screen + 200) then
+		go.delete()
+	else
+		self.move.x = self.move.x + self.speed * dt
+		go.set_position(self.move)
+	end
+end

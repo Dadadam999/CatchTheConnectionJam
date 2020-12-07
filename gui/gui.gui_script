@@ -1,0 +1,10 @@
+local data = require "collections.data"
+function init(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("battery_change") then
+		local str = gui.get_node("battery")
+		gui.set_text(str, "battery change: " .. message.count_battery)
+	end
+end
